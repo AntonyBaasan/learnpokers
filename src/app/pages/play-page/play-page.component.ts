@@ -16,11 +16,11 @@ import { Card } from '../../models/cards';
 export class PlayPageComponent implements OnInit {
   currentPlayerIndex = signal(0); // first player always starts
   communityCards: WritableSignal<Card[]> = signal([]);
-  players: PokerPlayer[];
+  players: WritableSignal<PokerPlayer[]> = signal([]);
 
   constructor(private pokerService: PokerService, private cardUtilsService: CardUtilsService) {
     pokerService.init();
-    this.players = pokerService.getPlayers();
+    this.updateView();
 
     // debug
     let table = pokerService.getGameState();
@@ -31,18 +31,24 @@ export class PlayPageComponent implements OnInit {
 
   }
 
+
   onGiveToCommunity(): void {
     this.pokerService.dealToCommunity();
     this.communityCards.set(this.pokerService.getCommunity());
   }
 
   onGiveToPlayer(): void {
-    this.pokerService.dealToPlayer(this.players[this.currentPlayerIndex()].id);
+    this.pokerService.dealToPlayer(this.players()[this.currentPlayerIndex()].id);
     this.movePlayerTurn();
   }
 
   getCardsAsString(cards: Card[]): string[] {
     return cards.map(c => this.cardUtilsService.cartToShortString(c));
+  }
+
+  onReset(): void {
+    this.pokerService.reset();
+    this.updateView();
   }
 
   onPlayerMove(move: 'fold' | 'call' | 'raise') {
@@ -54,12 +60,17 @@ export class PlayPageComponent implements OnInit {
   }
 
   private getCurrentPlayer(): PokerPlayer {
-    return this.players[this.currentPlayerIndex()];
+    return this.players()[this.currentPlayerIndex()];
+  }
+
+  private updateView() {
+    this.players.set(this.pokerService.getPlayers());
+    this.communityCards.set(this.pokerService.getCommunity());
   }
 
   private movePlayerTurn(): void {
     let prev = this.currentPlayerIndex();
-    if (prev + 1 == this.players.length) {
+    if (prev + 1 == this.players().length) {
       this.currentPlayerIndex.set(0);
     } else {
       this.currentPlayerIndex.set(prev + 1);

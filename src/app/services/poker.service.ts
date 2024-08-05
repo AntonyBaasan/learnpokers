@@ -38,6 +38,15 @@ export class PokerService {
     return this.pokerTable.state.commnunity;
   }
 
+  reset(): void {
+    // clear player hands
+    this.pokerTable.state.players.forEach(p => p.hand = []);
+    // clear community
+    this.pokerTable.state.commnunity = [];
+    // dealer shuffle the deck
+    this.pokerTable.state.dealer.shuffle();
+  }
+
   public dealToCommunity() {
     let dealtCard = this.pokerTable.state.dealer.dealCard();
     this.pokerTable.state.commnunity = [...this.pokerTable.state.commnunity, dealtCard];

@@ -3,21 +3,26 @@
 <div class="text-start">
   Community: {{ getCardsAsString(communityCards()) }}
 </div>
+<br />
 
 <div class="text-start">
-  <li *ngFor="let player of players; index as i">
-    {{ player.name }} | {{ getCardsAsString(player.hand) }} |
-    {{ isTurn(player.id) ? "-> *" : "" }}
+  <li *ngFor="let player of players(); index as i">
+    {{ isTurn(player.id) ? "(->)" : "" }}
+    {{ player.name }} -- ${{ player.cash }} --
+    {{ getCardsAsString(player.hand) }} --
   </li>
 </div>
 
 <div>
-  <button class="btn btn-primary" (click)="onGiveToCommunity()">
+  <button class="btn btn-primary m-1" (click)="onGiveToCommunity()">
     Open Card On Table
   </button>
-  <button class="btn btn-primary" (click)="onGiveToPlayer()">
+  <br />
+  <button class="btn btn-primary m-1" (click)="onGiveToPlayer()">
     Give Card To Current Player
   </button>
+  <br />
+  <button class="btn btn-primary m-1" (click)="onReset()">Reset</button>
 </div>
 <!-- <div class="text-start">
   <pre>{{table | json}}</pre>
