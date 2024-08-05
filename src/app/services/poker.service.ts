@@ -4,6 +4,7 @@ import { Deck } from './card-game/deck';
 import { Dealer } from './card-game/dealer';
 import { CardUtilsService } from './card-game/card-utils.service';
 import { Injectable } from '@angular/core';
+import { Card } from '../models/cards';
 
 @Injectable()
 export class PokerService {
@@ -19,9 +20,42 @@ export class PokerService {
       createdBy: 'Anonymous',
       state: {
         dealer: this.createDealer(),
+        commnunity: [],
         players: this.generateRandomPlayers(),
       } as PokerTableState,
     };
+  }
+
+  getGameState(): PokerTable {
+    return this.pokerTable;
+  }
+
+  getPlayers(): PokerPlayer[] {
+    return this.pokerTable.state.players ?? [];
+  }
+
+  getCommunity(): Card[] {
+    return this.pokerTable.state.commnunity;
+  }
+
+  public dealToCommunity() {
+    let dealtCard = this.pokerTable.state.dealer.dealCard();
+    this.pokerTable.state.commnunity = [...this.pokerTable.state.commnunity, dealtCard];
+  }
+
+  // gives cards to players
+  public dealToPlayer(playerId: string) {
+    let player = this.getPlayerById(playerId);
+    let dealtCard = this.pokerTable.state.dealer.dealCard();
+    player.hand = [...player.hand, dealtCard];
+  }
+
+  public getPlayerById(playerId: string): PokerPlayer {
+    let found = this.pokerTable.state.players.find(p => p.id === playerId);
+    if (found) {
+      return found;
+    }
+    throw Error("Can't find player with id: " + playerId);
   }
 
   private createDealer() {
@@ -30,14 +64,11 @@ export class PokerService {
     return new Dealer(deck);
   }
 
-  getGameState(): PokerTable {
-    return this.pokerTable;
-  }
-
   private generateRandomPlayers(): PokerPlayer[] {
     let players: PokerPlayer[] = [];
     for (let i = 1; i <= 5; i++) {
       players.push({
+        id: i.toString(),
         name: "Player" + (i),
         cash: 1000,
         hand: []

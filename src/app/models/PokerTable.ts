@@ -10,10 +10,12 @@ export interface PokerTable {
 
 export interface PokerTableState {
   dealer: Dealer,
+  commnunity: Card[];
   players: PokerPlayer[];
 }
 
 export interface PokerPlayer {
+  id: string;
   name: string;
   cash: number;
   hand: Card[];

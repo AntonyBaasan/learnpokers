@@ -1,5 +1,24 @@
-<p>play-page works!</p>
+<div>Player {{ this.currentPlayerIndex() }} turn</div>
 
 <div class="text-start">
-  <pre>{{table | json}}</pre>
+  Community: {{ getCardsAsString(communityCards()) }}
 </div>
+
+<div class="text-start">
+  <li *ngFor="let player of players; index as i">
+    {{ player.name }} | {{ getCardsAsString(player.hand) }} |
+    {{ isTurn(player.id) ? "-> *" : "" }}
+  </li>
+</div>
+
+<div>
+  <button class="btn btn-primary" (click)="onGiveToCommunity()">
+    Open Card On Table
+  </button>
+  <button class="btn btn-primary" (click)="onGiveToPlayer()">
+    Give Card To Current Player
+  </button>
+</div>
+<!-- <div class="text-start">
+  <pre>{{table | json}}</pre>
+</div> -->
