@@ -1,4 +1,4 @@
-import { PokerPlayer, PokerTable, PokerTableState } from '../models/PokerTable';
+import { PokerPlayer, PokerTable, PokerTableState, Raise } from '../models/PokerTable';
 import { v4 as uuidv4 } from 'uuid';
 import { Deck } from './card-game/deck';
 import { Dealer } from './card-game/dealer';
@@ -43,6 +43,10 @@ export class PokerService {
 
   getAnte(): number {
     return this.pokerTable.state.ante;
+  }
+
+  getCurrentRaise(): Raise {
+    return this.pokerTable.state.raise;
   }
 
   reset(): void {

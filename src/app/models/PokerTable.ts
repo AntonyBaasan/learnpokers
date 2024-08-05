@@ -13,7 +13,7 @@ export interface PokerTableState {
   ante: number,
   commnunity: Card[];
   players: PokerPlayer[];
-  raise: { playerIndex: number, raisedAmount: number }
+  raise: Raise
 }
 
 export interface PokerPlayer {
@@ -22,4 +22,9 @@ export interface PokerPlayer {
   cash: number;
   hand: Card[];
   folded: boolean
+}
+
+export interface Raise {
+  playerIndex: number;
+  raisedAmount: number;
 }

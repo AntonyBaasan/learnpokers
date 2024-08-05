@@ -5,22 +5,29 @@
 </div>
 <br />
 
+<div class="text-start">Ante: {{ ante() }}</div>
+<br />
+
 <div class="text-start">
-  Ante: {{ ante() }}
+  Raise: PlayerIndex={{ raise().playerIndex }}, RaiseAmount:{{
+    raise().raisedAmount
+  }}
 </div>
 <br />
 
 <div class="text-start">
   <li *ngFor="let player of players(); index as i">
     {{ isTurn(player.id) ? "(curr)" : "" }}
-    {{ player.name }} {{ isFolded(player.id) ? "(folded)" : "" }}-- ${{ player.cash }} --
-    [{{ getCardsAsString(player.hand) }}] --
+    {{ player.name }} {{ isFolded(player.id) ? "(folded)" : "" }}-- ${{
+      player.cash
+    }}
+    -- [{{ getCardsAsString(player.hand) }}] --
   </li>
 </div>
 
 <div>
   <button class="btn btn-primary m-1" (click)="onGiveToCommunity()">
-    Open Card On Table
+    Give Card To Community
   </button>
   <br />
   <button class="btn btn-primary m-1" (click)="onGiveToPlayer()">
@@ -28,7 +35,9 @@
   </button>
   <br />
   <button class="btn btn-primary m-1" (click)="onTurn('fold')">Fold</button>
-  <button class="btn btn-primary m-1" (click)="onTurn('check')">Check | Call</button>
+  <button class="btn btn-primary m-1" (click)="onTurn('check')">
+    Check | Call
+  </button>
   <button class="btn btn-primary m-1" (click)="onTurn('raise')">Raise</button>
   <br />
   <button class="btn btn-primary m-1" (click)="onReset()">Reset</button>

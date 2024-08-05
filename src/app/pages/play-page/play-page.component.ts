@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { PokerService } from '../../services/poker.service';
-import { PokerPlayer, PokerTable } from '../../models/PokerTable';
+import { PokerPlayer, Raise } from '../../models/PokerTable';
 import { CommonModule } from '@angular/common';
 import { CardUtilsService } from '../../services/card-game/card-utils.service';
 import { Card } from '../../models/cards';
@@ -18,6 +18,7 @@ export class PlayPageComponent implements OnInit {
   communityCards: WritableSignal<Card[]> = signal([]);
   players: WritableSignal<PokerPlayer[]> = signal([]);
   ante: WritableSignal<number> = signal(0);
+  raise: WritableSignal<Raise> = signal({ playerIndex: -1, raisedAmount: 0 });
 
   constructor(private pokerService: PokerService, private cardUtilsService: CardUtilsService) {
     pokerService.init();
@@ -74,6 +75,7 @@ export class PlayPageComponent implements OnInit {
     this.players.set(this.pokerService.getPlayers());
     this.communityCards.set(this.pokerService.getCommunity());
     this.ante.set(this.pokerService.getAnte());
+    this.raise.set(this.pokerService.getCurrentRaise());
   }
 
   private movePlayerTurn(): void {
