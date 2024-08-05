@@ -10,8 +10,10 @@ export interface PokerTable {
 
 export interface PokerTableState {
   dealer: Dealer,
+  ante: number,
   commnunity: Card[];
   players: PokerPlayer[];
+  raise: { playerIndex: number, raisedAmount: number }
 }
 
 export interface PokerPlayer {
@@ -19,4 +21,5 @@ export interface PokerPlayer {
   name: string;
   cash: number;
   hand: Card[];
+  folded: boolean
 }

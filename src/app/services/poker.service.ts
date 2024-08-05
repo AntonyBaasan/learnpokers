@@ -17,10 +17,13 @@ export class PokerService {
     this.pokerTable = {
       id: uuidv4(),
       createdAt: new Date().toUTCString(),
-      createdBy: 'Anonymous',
+      createdBy: 'anonymous',
       state: {
         dealer: this.createDealer(),
         commnunity: [],
+        ante: 0,
+        // start from no raise.
+        raise: { playerIndex: -1, raisedAmount: 0 },
         players: this.generateRandomPlayers(),
       } as PokerTableState,
     };
@@ -38,9 +41,16 @@ export class PokerService {
     return this.pokerTable.state.commnunity;
   }
 
+  getAnte(): number {
+    return this.pokerTable.state.ante;
+  }
+
   reset(): void {
     // clear player hands
-    this.pokerTable.state.players.forEach(p => p.hand = []);
+    this.pokerTable.state.players.forEach(p => {
+      p.hand = [];
+      p.folded = false;
+    });
     // clear community
     this.pokerTable.state.commnunity = [];
     // dealer shuffle the deck
@@ -67,6 +77,18 @@ export class PokerService {
     throw Error("Can't find player with id: " + playerId);
   }
 
+  public fold(playerId: string) {
+    let player = this.getPlayerById(playerId);
+    player.folded = true;
+  }
+
+  public raise(playerIndex: number, amount: number) {
+    this.pokerTable.state.raise = {
+      playerIndex: playerIndex,
+      raisedAmount: amount,
+    }
+  }
+
   private createDealer() {
     const cards = this.cardUtilsService.generateCards();
     const deck = new Deck(cards);
@@ -80,7 +102,8 @@ export class PokerService {
         id: i.toString(),
         name: "Player" + (i),
         cash: 1000,
-        hand: []
+        hand: [],
+        folded: false
       } as PokerPlayer);
     }
     return players;

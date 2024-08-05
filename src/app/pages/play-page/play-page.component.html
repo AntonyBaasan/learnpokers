@@ -1,15 +1,20 @@
 <div>Player {{ this.currentPlayerIndex() }} turn</div>
 
 <div class="text-start">
-  Community: {{ getCardsAsString(communityCards()) }}
+  Community: [{{ getCardsAsString(communityCards()) }}]
+</div>
+<br />
+
+<div class="text-start">
+  Ante: {{ ante() }}
 </div>
 <br />
 
 <div class="text-start">
   <li *ngFor="let player of players(); index as i">
-    {{ isTurn(player.id) ? "(->)" : "" }}
-    {{ player.name }} -- ${{ player.cash }} --
-    {{ getCardsAsString(player.hand) }} --
+    {{ isTurn(player.id) ? "(curr)" : "" }}
+    {{ player.name }} {{ isFolded(player.id) ? "(folded)" : "" }}-- ${{ player.cash }} --
+    [{{ getCardsAsString(player.hand) }}] --
   </li>
 </div>
 
@@ -21,6 +26,10 @@
   <button class="btn btn-primary m-1" (click)="onGiveToPlayer()">
     Give Card To Current Player
   </button>
+  <br />
+  <button class="btn btn-primary m-1" (click)="onTurn('fold')">Fold</button>
+  <button class="btn btn-primary m-1" (click)="onTurn('check')">Check | Call</button>
+  <button class="btn btn-primary m-1" (click)="onTurn('raise')">Raise</button>
   <br />
   <button class="btn btn-primary m-1" (click)="onReset()">Reset</button>
 </div>

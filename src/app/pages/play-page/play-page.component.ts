@@ -17,6 +17,7 @@ export class PlayPageComponent implements OnInit {
   currentPlayerIndex = signal(0); // first player always starts
   communityCards: WritableSignal<Card[]> = signal([]);
   players: WritableSignal<PokerPlayer[]> = signal([]);
+  ante: WritableSignal<number> = signal(0);
 
   constructor(private pokerService: PokerService, private cardUtilsService: CardUtilsService) {
     pokerService.init();
@@ -30,7 +31,6 @@ export class PlayPageComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
 
   onGiveToCommunity(): void {
     this.pokerService.dealToCommunity();
@@ -51,12 +51,19 @@ export class PlayPageComponent implements OnInit {
     this.updateView();
   }
 
-  onPlayerMove(move: 'fold' | 'call' | 'raise') {
-
+  onTurn(move: 'fold' | 'call' | 'check' | 'raise') {
+    if (move == 'fold') {
+      this.pokerService.fold(this.getCurrentPlayer().id);
+    }
+    this.movePlayerTurn();
   }
 
   isTurn(playerId: string): boolean {
     return this.getCurrentPlayer().id === playerId;
+  }
+
+  isFolded(playerId: string): boolean {
+    return this.pokerService.getPlayerById(playerId).folded;
   }
 
   private getCurrentPlayer(): PokerPlayer {
@@ -66,6 +73,7 @@ export class PlayPageComponent implements OnInit {
   private updateView() {
     this.players.set(this.pokerService.getPlayers());
     this.communityCards.set(this.pokerService.getCommunity());
+    this.ante.set(this.pokerService.getAnte());
   }
 
   private movePlayerTurn(): void {
