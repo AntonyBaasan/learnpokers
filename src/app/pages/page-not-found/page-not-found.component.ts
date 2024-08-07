@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
+import { PageWrapperComponent } from '../../components/shared/page-wrapper/page-wrapper.component';
 
 @Component({
   selector: 'app-page-not-found',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent],
+  imports: [PageWrapperComponent],
   templateUrl: './page-not-found.component.html',
   styleUrl: './page-not-found.component.scss'
 })

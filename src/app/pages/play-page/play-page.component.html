@@ -1,47 +1,49 @@
-<div>Player {{ this.currentPlayerIndex() }} turn</div>
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <div>Player {{ this.currentPlayerIndex() }} turn</div>
 
-<div class="text-start">
-  Community: [{{ getCardsAsString(communityCards()) }}]
-</div>
-<br />
+  <div class="text-start">
+    Community: [{{ getCardsAsString(communityCards()) }}]
+  </div>
+  <br />
 
-<div class="text-start">Ante: {{ ante() }}</div>
-<br />
+  <div class="text-start">Ante: {{ ante() }}</div>
+  <br />
 
-<div class="text-start">
-  Raise: PlayerIndex={{ raise().playerIndex }}, RaiseAmount:{{
-    raise().raisedAmount
-  }}
-</div>
-<br />
-
-<div class="text-start">
-  <li *ngFor="let player of players(); index as i">
-    {{ isTurn(player.id) ? "(curr)" : "" }}
-    {{ player.name }} {{ isFolded(player.id) ? "(folded)" : "" }}-- ${{
-      player.cash
+  <div class="text-start">
+    Raise: PlayerIndex={{ raise().playerIndex }}, RaiseAmount:{{
+      raise().raisedAmount
     }}
-    -- [{{ getCardsAsString(player.hand) }}] --
-  </li>
-</div>
+  </div>
+  <br />
 
-<div>
-  <button class="btn btn-primary m-1" (click)="onGiveToCommunity()">
-    Give Card To Community
-  </button>
-  <br />
-  <button class="btn btn-primary m-1" (click)="onGiveToPlayer()">
-    Give Card To Current Player
-  </button>
-  <br />
-  <button class="btn btn-primary m-1" (click)="onTurn('fold')">Fold</button>
-  <button class="btn btn-primary m-1" (click)="onTurn('check')">
-    Check | Call
-  </button>
-  <button class="btn btn-primary m-1" (click)="onTurn('raise')">Raise</button>
-  <br />
-  <button class="btn btn-primary m-1" (click)="onReset()">Reset</button>
-</div>
-<!-- <div class="text-start">
+  <div class="text-start">
+    <li *ngFor="let player of players(); index as i">
+      {{ isTurn(player.id) ? "(curr)" : "" }}
+      {{ player.name }} {{ isFolded(player.id) ? "(folded)" : "" }}-- ${{
+        player.cash
+      }}
+      -- [{{ getCardsAsString(player.hand) }}] --
+    </li>
+  </div>
+
+  <div>
+    <button class="btn btn-primary m-1" (click)="onGiveToCommunity()">
+      Give Card To Community
+    </button>
+    <br />
+    <button class="btn btn-primary m-1" (click)="onGiveToPlayer()">
+      Give Card To Current Player
+    </button>
+    <br />
+    <button class="btn btn-primary m-1" (click)="onTurn('fold')">Fold</button>
+    <button class="btn btn-primary m-1" (click)="onTurn('check')">
+      Check | Call
+    </button>
+    <button class="btn btn-primary m-1" (click)="onTurn('raise')">Raise</button>
+    <br />
+    <button class="btn btn-primary m-1" (click)="onReset()">Reset</button>
+  </div>
+  <!-- <div class="text-start">
   <pre>{{table | json}}</pre>
 </div> -->
+</div>
