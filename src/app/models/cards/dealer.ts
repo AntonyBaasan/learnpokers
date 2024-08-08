@@ -1,10 +1,14 @@
-import { range } from 'rxjs';
 import { Card } from '../../models/cards';
+import { Actor } from './actor';
 import { Deck } from './deck';
 
-export class Dealer {
+export class Dealer implements Actor {
 
   constructor(private deck: Deck) {
+  }
+
+  getRole(): 'dealer' | 'player' {
+    return 'dealer';
   }
 
   shuffle() {

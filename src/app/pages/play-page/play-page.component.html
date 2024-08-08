@@ -27,19 +27,15 @@
   </div>
 
   <div>
-    <button class="btn btn-primary m-1" (click)="onGiveToCommunity()">
-      Give Card To Community
+    <button class="btn btn-primary m-1" (click)="onDealerDeal()">
+      Dealer Deal
     </button>
     <br />
-    <button class="btn btn-primary m-1" (click)="onGiveToPlayer()">
-      Give Card To Current Player
-    </button>
-    <br />
-    <button class="btn btn-primary m-1" (click)="onTurn('fold')">Fold</button>
-    <button class="btn btn-primary m-1" (click)="onTurn('check')">
+    <button class="btn btn-primary m-1" (click)="onPlayerMove('fold')">Fold</button>
+    <button class="btn btn-primary m-1" (click)="onPlayerMove('check')">
       Check | Call
     </button>
-    <button class="btn btn-primary m-1" (click)="onTurn('raise')">Raise</button>
+    <button class="btn btn-primary m-1" (click)="onPlayerMove('raise')">Raise</button>
     <br />
     <button class="btn btn-primary m-1" (click)="onReset()">Reset</button>
   </div>

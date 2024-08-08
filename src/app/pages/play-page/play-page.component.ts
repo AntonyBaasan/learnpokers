@@ -1,9 +1,11 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
-import { PokerService } from '../../services/poker.service';
-import { PokerPlayer, Raise } from '../../models/PokerTable';
+import { PokerGameService } from '../../services/poker/poker-game.service';
+import { CardGameService } from '../../services/poker/card-game.service';
 import { CommonModule } from '@angular/common';
 import { CardUtilsService } from '../../services/card-game/card-utils.service';
 import { Card } from '../../models/cards';
+import { PokerGameInfo, PokerPlayer, Raise } from '../../models/PokerGameInfo';
+import { Actor } from '../../models/cards/actor';
 
 @Component({
   selector: 'app-play-page',
@@ -11,21 +13,21 @@ import { Card } from '../../models/cards';
   imports: [CommonModule],
   templateUrl: './play-page.component.html',
   styleUrl: './play-page.component.scss',
-  providers: [PokerService]
+  providers: [{provide: CardGameService, useClass: PokerGameService}]
 })
 export class PlayPageComponent implements OnInit {
-  currentPlayerIndex = signal(0); // first player always starts
   communityCards: WritableSignal<Card[]> = signal([]);
   players: WritableSignal<PokerPlayer[]> = signal([]);
   ante: WritableSignal<number> = signal(0);
   raise: WritableSignal<Raise> = signal({ playerIndex: -1, raisedAmount: 0 });
 
-  constructor(private pokerService: PokerService, private cardUtilsService: CardUtilsService) {
-    pokerService.init();
+  constructor(private gameService: CardGameService, private cardUtilsService: CardUtilsService) {
+    gameService.start();
+
     this.updateView();
 
     // debug
-    let table = pokerService.getGameState();
+    let table = gameService.getVisualState();
     console.log('start state: ', table);
   }
 
@@ -33,14 +35,9 @@ export class PlayPageComponent implements OnInit {
 
   }
 
-  onGiveToCommunity(): void {
-    this.pokerService.dealToCommunity();
-    this.communityCards.set(this.pokerService.getCommunity());
-  }
-
-  onGiveToPlayer(): void {
-    this.pokerService.dealToPlayer(this.players()[this.currentPlayerIndex()].id);
-    this.movePlayerTurn();
+  onDealerDeal(): void {
+    this.gameService.dealerDeal(1);
+    this.updateView();
   }
 
   getCardsAsString(cards: Card[]): string[] {
@@ -48,42 +45,44 @@ export class PlayPageComponent implements OnInit {
   }
 
   onReset(): void {
-    this.pokerService.reset();
+    this.gameService.resetRound();
     this.updateView();
   }
 
-  onTurn(move: 'fold' | 'call' | 'check' | 'raise') {
-    if (move == 'fold') {
-      this.pokerService.fold(this.getCurrentPlayer().id);
+  onPlayerMove(move: 'fold' | 'call' | 'check' | 'raise') {
+    let personToMove: Actor = this.gameService.whosTurn();
+    if(personToMove.getRole() === 'dealer') {
+      return;
     }
-    this.movePlayerTurn();
+    let player = this.gameService.playerWithTurn();
+    this.gameService.playerMove(player.id, move);
+
+    this.updateView();
   }
 
   isTurn(playerId: string): boolean {
-    return this.getCurrentPlayer().id === playerId;
+    return this.gameService.isPlayerTurn(playerId);
   }
 
   isFolded(playerId: string): boolean {
-    return this.pokerService.getPlayerById(playerId).folded;
-  }
-
-  private getCurrentPlayer(): PokerPlayer {
-    return this.players()[this.currentPlayerIndex()];
+    return this.gameService.isPlayerFolded(playerId);
   }
 
   private updateView() {
-    this.players.set(this.pokerService.getPlayers());
-    this.communityCards.set(this.pokerService.getCommunity());
-    this.ante.set(this.pokerService.getAnte());
-    this.raise.set(this.pokerService.getCurrentRaise());
+    let gameInfo = this.gameService.getVisualState() as PokerGameInfo;
+
+    this.players.set(gameInfo.players);
+    this.communityCards.set(gameInfo.commnunity);
+    this.ante.set(gameInfo.ante);
+    this.raise.set(gameInfo.raise);
   }
 
-  private movePlayerTurn(): void {
-    let prev = this.currentPlayerIndex();
-    if (prev + 1 == this.players().length) {
-      this.currentPlayerIndex.set(0);
-    } else {
-      this.currentPlayerIndex.set(prev + 1);
-    }
-  }
+  // private movePlayerTurn(): void {
+  //   let prev = this.currentPlayerIndex();
+  //   if (prev + 1 == this.players().length) {
+  //     this.currentPlayerIndex.set(0);
+  //   } else {
+  //     this.currentPlayerIndex.set(prev + 1);
+  //   }
+  // }
 }

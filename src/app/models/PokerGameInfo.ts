@@ -1,14 +1,11 @@
-import { Dealer } from '../services/card-game/dealer';
 import { Card } from './cards/Card';
+import { Dealer } from './cards/dealer';
 
-export interface PokerTable {
+export interface PokerGameInfo {
   id: string;
   createdAt: string;
   createdBy: string;
-  state: PokerTableState;
-}
-
-export interface PokerTableState {
+  // dealer hold a deck
   dealer: Dealer,
   ante: number,
   commnunity: Card[];
