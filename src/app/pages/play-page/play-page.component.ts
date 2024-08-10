@@ -55,6 +55,7 @@ export class PlayPageComponent implements OnInit {
       return;
     }
     let player = this.gameService.playerWithTurn();
+    
     this.gameService.playerMove(player.id, move);
 
     this.updateView();
@@ -76,13 +77,4 @@ export class PlayPageComponent implements OnInit {
     this.ante.set(gameInfo.ante);
     this.raise.set(gameInfo.raise);
   }
-
-  // private movePlayerTurn(): void {
-  //   let prev = this.currentPlayerIndex();
-  //   if (prev + 1 == this.players().length) {
-  //     this.currentPlayerIndex.set(0);
-  //   } else {
-  //     this.currentPlayerIndex.set(prev + 1);
-  //   }
-  // }
 }

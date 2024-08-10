@@ -7,6 +7,10 @@ export class Dealer implements Actor {
   constructor(private deck: Deck) {
   }
 
+  getId(): string {
+    return '';
+  }
+
   getRole(): 'dealer' | 'player' {
     return 'dealer';
   }

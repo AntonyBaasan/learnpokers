@@ -1,4 +1,4 @@
-import { PokerGameInfo, PokerPlayer, Raise } from '../../models/PokerGameInfo';
+import { PlayerMove, PokerGameInfo, PokerPlayer, Raise } from '../../models/PokerGameInfo';
 import { v4 as uuidv4 } from 'uuid';
 import { CardUtilsService } from '../card-game/card-utils.service';
 import { Injectable } from '@angular/core';
@@ -12,6 +12,9 @@ import { Card } from '../../models/cards';
 
 @Injectable()
 export class PokerGameService extends CardGameService {
+  override getPlayers(): PokerPlayer[] {
+    return this.gameInfo.players;
+  }
   override playerWithTurn(): PokerPlayer {
     throw new Error('Method not implemented.');
   }
@@ -38,7 +41,7 @@ export class PokerGameService extends CardGameService {
   override dealerDeal(cardAmount: number): void {
     this.currentState.dealerMove(cardAmount);
   }
-  override playerMove(playerId: string, move: string): void {
+  override playerMove(playerId: string, move: PlayerMove): void {
     this.currentState.playerMove(playerId, move);
   }
   override whosTurn(): Actor {
@@ -122,13 +125,13 @@ export class PokerGameService extends CardGameService {
   private generateRandomPlayers(count: number): PokerPlayer[] {
     let players: PokerPlayer[] = [];
     for (let i = 1; i <= count; i++) {
-      players.push({
-        id: i.toString(),
-        name: "Player" + (i),
-        cash: 1000,
-        hand: [],
-        folded: false
-      } as PokerPlayer);
+      players.push(new PokerPlayer(
+        i.toString(),
+        "Player" + (i),
+        1000,
+        [],
+        false
+      ));
     }
     return players;
   }

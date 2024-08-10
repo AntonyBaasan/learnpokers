@@ -1,5 +1,5 @@
 import { Actor } from '../../models/cards/actor';
-import { PokerPlayer } from '../../models/PokerGameInfo';
+import { PlayerMove, PokerPlayer } from '../../models/PokerGameInfo';
 import { IPokerState } from './states/IPokerState';
 
 export abstract class CardGameService {
@@ -7,8 +7,8 @@ export abstract class CardGameService {
   abstract getVisualState(): any;
   abstract start(): void;
   abstract dealerDeal(cardAmount: number): void;
-  abstract playerMove(playerId: string, move: string): void;
-  // abstract getPlayers(): PokerPlayer[];
+  abstract playerMove(playerId: string, move: PlayerMove): void;
+  abstract getPlayers(): PokerPlayer[];
   abstract whosTurn(): Actor;
   abstract playerWithTurn(): PokerPlayer;
   abstract resetRound(): void;
